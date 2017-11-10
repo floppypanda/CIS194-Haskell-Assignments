@@ -7,6 +7,11 @@ len (x:xs) = 1 + len(xs)
 isEven :: Int -> Bool
 isEven n = (n `mod` 2 == 0)
 
+-- Converts an integer to a list of digits.
+toDigits :: Int -> [Int]
+toDigits 0 = []
+toDigits n = toDigits (n `div` 10) ++ [(n `mod` 10)]
+
 -- Adds the digits of an integer.
 addDigits :: Int -> Int
 addDigits 0 = 0
@@ -25,6 +30,5 @@ addListDigits [] = 0
 addListDigits (x:xs) = addDigits(x) + addListDigits(xs)
 
 -- Determines if a card number is valid.
-isValidCardNumber :: [Int] -> Bool
-isValidCardNumber [] = False
-isValidCardNumber n = ((addListDigits (doubleEveryOtherDigit n (isEven (len n)))) `mod` 10) == 0
+isValidCardNumber :: Int -> Bool
+isValidCardNumber n = ((addListDigits (doubleEveryOtherDigit (toDigits n) (isEven (len (toDigits n))))) `mod` 10) == 0
