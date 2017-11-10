@@ -1,2 +1,5 @@
-# CIS194-Haskell-Assignments
-Solutions to the University of Pennsylvania's Introduction to Haskell coding assignments.
+# CIS 194 - Introduction to Haskell
+Solutions to the University of Pennsylvania's "Introduction to Haskell" coding assignments.
+
+The entire course can be taken, for free, at http://www.cis.upenn.edu/~cis194/spring13/.
+
