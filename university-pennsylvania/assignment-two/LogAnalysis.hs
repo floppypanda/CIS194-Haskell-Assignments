@@ -29,3 +29,7 @@ insert logMessage (Node leftTree nodeMessage rightTree) =
 build :: [LogMessage] -> MessageTree
 build [] = Leaf
 build (logMessage:otherMessages) = insert logMessage (build otherMessages)
+
+inOrder :: MessageTree -> [LogMessage]
+inOrder Leaf = []
+inOrder (Node leftTree logMessage rightTree) = (inOrder leftTree) ++ [logMessage] ++ (inOrder rightTree)
