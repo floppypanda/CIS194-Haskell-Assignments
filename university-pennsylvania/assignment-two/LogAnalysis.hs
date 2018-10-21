@@ -25,3 +25,7 @@ insert logMessage (Node leftTree nodeMessage rightTree) =
         Node (insert logMessage leftTree) nodeMessage rightTree
     else
         Node leftTree nodeMessage (insert logMessage rightTree)
+
+build :: [LogMessage] -> MessageTree
+build [] = Leaf
+build (logMessage:otherMessages) = insert logMessage (build otherMessages)
