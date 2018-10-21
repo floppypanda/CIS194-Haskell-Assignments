@@ -33,3 +33,12 @@ build (logMessage:otherMessages) = insert logMessage (build otherMessages)
 inOrder :: MessageTree -> [LogMessage]
 inOrder Leaf = []
 inOrder (Node leftTree logMessage rightTree) = (inOrder leftTree) ++ [logMessage] ++ (inOrder rightTree)
+
+whatWentWrong :: [LogMessage] -> [String]
+whatWentWrong ((LogMessage (Error severity) _ message):otherMessages) =
+    if severity >= 50 then
+        [message] ++ (whatWentWrong otherMessages)
+    else
+        whatWentWrong otherMessages
+whatWentWrong (nonErrorMessage:otherMessages) = whatWentWrong otherMessages
+whatWentWrong _ = []
