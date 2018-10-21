@@ -13,3 +13,15 @@ parseMessage line = interpret (words line)
 
 parse :: String -> [LogMessage]
 parse content = map parseMessage (lines content)
+
+compareTimestamp :: LogMessage -> LogMessage -> Int
+compareTimestamp (LogMessage _ timestampOne _) (LogMessage _ timestampTwo _) = timestampOne - timestampTwo
+
+insert :: LogMessage -> MessageTree -> MessageTree
+insert (Unknown _) tree = tree
+insert logMessage Leaf = Node Leaf logMessage Leaf
+insert logMessage (Node leftTree nodeMessage rightTree) =
+    if (compareTimestamp logMessage nodeMessage) < 0 then
+        Node (insert logMessage leftTree) nodeMessage rightTree
+    else
+        Node leftTree nodeMessage (insert logMessage rightTree)
