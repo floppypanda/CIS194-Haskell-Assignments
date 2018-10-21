@@ -20,11 +20,9 @@ compareTimestamp (LogMessage _ timestampOne _) (LogMessage _ timestampTwo _) = t
 insert :: LogMessage -> MessageTree -> MessageTree
 insert (Unknown _) tree = tree
 insert logMessage Leaf = Node Leaf logMessage Leaf
-insert logMessage (Node leftTree nodeMessage rightTree) =
-    if (compareTimestamp logMessage nodeMessage) < 0 then
-        Node (insert logMessage leftTree) nodeMessage rightTree
-    else
-        Node leftTree nodeMessage (insert logMessage rightTree)
+insert logMessage (Node leftTree nodeMessage rightTree)
+    | (compareTimestamp logMessage nodeMessage) < 0 = Node (insert logMessage leftTree) nodeMessage rightTree
+    | otherwise = Node leftTree nodeMessage (insert logMessage rightTree)
 
 build :: [LogMessage] -> MessageTree
 build [] = Leaf
@@ -35,10 +33,8 @@ inOrder Leaf = []
 inOrder (Node leftTree logMessage rightTree) = (inOrder leftTree) ++ [logMessage] ++ (inOrder rightTree)
 
 whatWentWrong :: [LogMessage] -> [String]
-whatWentWrong ((LogMessage (Error severity) _ message):otherMessages) =
-    if severity >= 50 then
-        [message] ++ (whatWentWrong otherMessages)
-    else
-        whatWentWrong otherMessages
+whatWentWrong ((LogMessage (Error severity) _ message):otherMessages)
+    | severity >= 50 = [message] ++ (whatWentWrong otherMessages)
+    | otherwise = whatWentWrong otherMessages
 whatWentWrong (nonErrorMessage:otherMessages) = whatWentWrong otherMessages
 whatWentWrong _ = []
