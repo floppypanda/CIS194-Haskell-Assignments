@@ -35,3 +35,31 @@ buildHistogram :: [Int] -> String
 buildHistogram frequencies = do
     let maxFrequency = maximum frequencies
     intercalate "\n" (map (buildHistogramLine frequencies) [maxFrequency,(maxFrequency-1)..1]) ++ "\n"
+
+count :: [Int] -> Int -> Int
+count [] _ = 0
+count (x:xs) num
+    | x == num = 1 + (count xs num)
+    | otherwise = count xs num
+
+remove :: [Int] -> Int -> [Int]
+remove [] _ = []
+remove (x:xs) num
+    | x == num = remove xs num
+    | otherwise = [x] ++ remove xs num
+
+sortTuples :: Ord a => Ord b => [(a,b)] -> [(a,b)]
+sortTuples [] = []
+sortTuples tuples = sortBy (\(a,_) (b,_) -> compare a b) tuples
+
+getFrequencies :: [Int] -> [(Int,Int)]
+getFrequencies [] = []
+getFrequencies (x:xs) = sortBy (\(a,_) (b,_) -> compare a b) ([(x, 1 + (count xs x))] ++ (getFrequencies (remove xs x)))
+
+histogram :: [Int] -> String
+histogram [] = ""
+histogram numbers = do
+    let nonzeroFrequencies = getFrequencies numbers
+    let zeroFrequencyElements = ([0..9] \\ (map (fst) nonzeroFrequencies))
+    let zeroFrequencies = map (\x -> (x,0)) zeroFrequencyElements
+    (buildHistogram (map (snd) (sortTuples (nonzeroFrequencies ++ zeroFrequencies)))) ++ "==========" ++ "\n0123456789\n"
