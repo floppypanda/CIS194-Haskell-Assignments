@@ -36,3 +36,6 @@ combineNodes (Node num leftTree elem rightTree) tree = (Node num (combineNodes l
 
 foldTree :: [a] -> Tree a
 foldTree = foldl combineNodes Leaf . makeNodes
+
+xor :: [Bool] -> Bool
+xor = foldl (\a b -> (not a && b) || (a && not b)) False
