@@ -14,3 +14,25 @@ getNextElement n
 collatzSequenceSum :: Integer -> Integer
 collatzSequenceSum 1 = 1
 collatzSequenceSum n = 1 + n + sum (takeWhile (/=1)  (iterate getNextElement n))
+
+data Tree a = Leaf
+            | Node Integer (Tree a) a (Tree a)
+  deriving (Show, Eq)
+
+makeNode :: Integer -> a -> Tree a
+makeNode num elem = Node num Leaf elem Leaf
+
+makeNodes :: [a] -> [Tree a]
+makeNodes list = zipWith ($) (map makeNode $ map toInteger [0..(length list)-1]) list
+
+combineNodes :: Tree a -> Tree a -> Tree a
+combineNodes Leaf Leaf = Leaf
+combineNodes Leaf tree = tree
+combineNodes tree Leaf = tree
+combineNodes (Node num Leaf elem Leaf) tree = Node num tree elem Leaf
+combineNodes (Node num leftTree elem Leaf) tree = Node num leftTree elem tree
+combineNodes (Node num Leaf elem rightTree) tree = Node num tree elem rightTree
+combineNodes (Node num leftTree elem rightTree) tree = (Node num (combineNodes leftTree tree) elem rightTree)
+
+foldTree :: [a] -> Tree a
+foldTree = foldl combineNodes Leaf . makeNodes
