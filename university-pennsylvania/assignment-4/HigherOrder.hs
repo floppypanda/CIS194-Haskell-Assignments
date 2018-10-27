@@ -39,3 +39,6 @@ foldTree = foldl combineNodes Leaf . makeNodes
 
 xor :: [Bool] -> Bool
 xor = foldl (\a b -> (not a && b) || (a && not b)) False
+
+map' :: (a -> b) -> [a] -> [b]
+map' f = foldr (\x y -> (f x) : y) []
