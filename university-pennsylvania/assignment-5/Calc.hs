@@ -16,3 +16,16 @@ evalStr str = do
     case parseResult of
         Nothing -> Nothing
         Just res -> Just (eval res)
+
+class Expr a where
+    lit :: Integer -> a
+    add :: a -> a -> a
+    mul :: a -> a -> a
+
+instance Expr ExprT where
+    lit num = (Lit num)
+    add expOne expTwo = (Add expOne expTwo)
+    mul expOne expTwo = (Mul expOne expTwo)
+
+reify :: ExprT -> ExprT
+reify = id
